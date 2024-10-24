@@ -1,4 +1,6 @@
-FROM infotrainingdev/gcc14-cmake329-vcpkg-boost:latest
+FROM gcc:latest
+
+# FROM infotrainingdev/gcc14-cmake329-vcpkg-boost:latest
 # FROM infotrainingdev/gcc13-cmake327-vcpkg-boost:latest
 # FROM gcc14-cmake329-vcpkg:latest
 

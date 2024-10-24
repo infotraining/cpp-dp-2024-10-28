@@ -7,62 +7,42 @@
 
 ## Konfiguracja środowiska
 
-Proszę wybrać jedną z poniższych opcji:
+### Wymagania
 
-### Lokalna
+* GCC 12+
+* CMake 3.21+
 
-Przed szkoleniem należy zainstalować:
+### Kompilacja w linii komend
 
-#### Kompilator C++ wspierający C++17 - do wyboru:
-  * Visual Studio 2022
-    * przy instalacji należy zaznaczyć opcje:
-      * Desktop development with C++
-      * C++ CMake tools for Windows
-      * vcpkg package manager
+* Proszę sklonować repozytorium:
 
-  * GCC - Linux lub WSL
-    * gcc (wersja >= 12)
-    * [CMake > 3.25](https://cmake.org/)
-      * proszę sprawdzić wersję w linii poleceń        
-  
-        ```
-        cmake --version
-        ```
-    * vcpkg
-      * instalacja - https://learn.microsoft.com/en-us/vcpkg/get_started/get-started?pivots=shell-bash
-        * zklonować repozytorium vcpkg
-          ```
-          git clone https://github.com/microsoft/vcpkg.git
-          ```
-        * uruchomić skrypt bootstrap-vcpkg.sh
-          ```
-          cd vcpkg && ./bootstrap-vcpkg.sh
-          ``` 
-        * dodać zmienną środowiskową VCPKG_ROOT
-          * w pliku `.bashrc` należy dodać wpis
-          ```
-          export VCPKG_ROOT=/path/to/vcpkg
-          export PATH=$VCPKG_ROOT:$PATH
-          ```
-    * IDE: Visual Studio Code
-      * [Visual Studio Code](https://code.visualstudio.com/)
-      * zainstalować wtyczki
-        * C/C++ Extension Pack
-        * Live Share
+```bash
+git clone https://github.com/infotraining/cpp-dp-2024-10-28.git
+```
 
-### Docker + Visual Studio Code
+* Następnie przejść do katalogu z projektem:
 
-Jeśli uczestnicy szkolenia korzystają w pracy z Docker'a, to należy zainstalować:
+```bash
+cd cpp-dp-2024-10-28
+```
 
-#### Docker Desktop (Windows)
+* Następnie utworzyć katalog `build` i przejść do niego:
 
-* https://www.docker.com/products/docker-desktop/
+```bash
+mkdir build
+cd build
+```
 
-#### Visual Studio Code
+* Następnie wywołać `cmake`:
 
-* [Visual Studio Code](https://code.visualstudio.com/)
-* Zainstalować wtyczki
-  * Live Share
-  * Dev Containers ([wymagania](https://code.visualstudio.com/docs/devcontainers/containers#_system-requirements))
-    * po instalacji wtyczki - należy otworzyć w VS Code folder zawierający sklonowane repozytorium i
-      z palety poleceń (Ctrl+Shift+P) wybrać opcję **Dev Containers: Rebuild and Reopen in Container**
+```bash
+cmake ..
+```
+
+* Następnie wywołać zbudować projekt:
+
+```bash
+cmake --build .
+```
+
+
