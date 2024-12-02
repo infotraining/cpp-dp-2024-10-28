@@ -61,7 +61,7 @@ namespace DynamicPolymorphism
 
     class Logger
     {
-        std::unique_ptr<Formatter> formatter_;
+        std::unique_ptr<Formatter> formatter_; // reference semantics
 
     public:
         Logger(std::unique_ptr<Formatter> formatter)
@@ -77,6 +77,11 @@ namespace DynamicPolymorphism
 
 namespace StaticPolymorphism
 {
+    template<typename T>
+    concept Formatter = requires (T fmt, std::string s) {
+        { fmt.format(s) } -> std::same_as<std::string>; 
+    };   
+
     struct UpperCaseFormatter
     {
         std::string format(const std::string& message) const
@@ -98,15 +103,15 @@ namespace StaticPolymorphism
         }
     };
 
-    template <typename TFormatter = UpperCaseFormatter>
+    template <Formatter T = UpperCaseFormatter>
     class Logger
     {
-        TFormatter formatter_;
+        T formatter_; // value semantics
 
     public:
         Logger() = default;
 
-        Logger(TFormatter formatter)
+        Logger(T formatter)
             : formatter_(std::move(formatter))
         {
         }
@@ -136,11 +141,15 @@ void static_polymorphism()
 {
     using namespace StaticPolymorphism;
 
-    Logger logger{UpperCaseFormatter{}};
+    Logger logger{UpperCaseFormatter{}}; // CTAD - C++17
     logger.log("Hello, World!");
 
     Logger<CapitalizeFormatter> logger2;
     logger2.log("hello, world!");
+
+    // Logger<std::vector<int>> logger3;
+    // logger3.log("hello, world!");
+
 }
 
 class Container : std::vector<int>
