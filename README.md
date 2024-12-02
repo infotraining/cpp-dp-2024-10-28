@@ -4,6 +4,7 @@
 
 * https://infotraining.bitbucket.io/cpp-dp
 * https://infotraining.bitbucket.io/cpp-dp/slides
+* https://infotraining.bitbucket.io/cpp-dp/slides_EN
 
 ## Konfiguracja środowiska
 
