@@ -42,7 +42,7 @@ public:
 
     void operation() override
     {
-        component_->operation();
+        component_->operation(); // delegation to decorated component
     }
 };
 
@@ -59,7 +59,7 @@ public:
     }
 
     void operation() override
-    {
+    {        
         Decorator::operation();
         added_state_ = "added state";
         std::cout << " and decorated with " << added_state_;

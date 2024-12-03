@@ -6,6 +6,7 @@
 #include <list>
 #include <memory>
 #include <string>
+#include <vector>
 
 // "Component"
 class Component

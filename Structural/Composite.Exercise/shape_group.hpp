@@ -9,8 +9,9 @@
 namespace Drawing
 {
     // TODO - implement a composite for shapes
-    class ShapeGroup
+    class ShapeGroup : public Shape
     {
+        std::vector<std::unique_ptr<Shape>> shapes_;
     };
 }
 
