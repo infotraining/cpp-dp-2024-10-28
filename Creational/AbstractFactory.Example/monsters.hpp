@@ -25,6 +25,7 @@ namespace Game
     {
     };
 
+    /* Silly Family - simple logic */
     class SillySoldier : public Soldier
     {
     public:
@@ -52,6 +53,7 @@ namespace Game
         }
     };
 
+    /* Bad Family - super logic */
     class BadSoldier : public Soldier
     {
     public:

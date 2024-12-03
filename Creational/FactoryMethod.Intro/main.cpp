@@ -161,6 +161,19 @@ namespace ModernCpp
     };
 }
 
+void parallel_class_hierarchies()
+{
+    std::list<int> container;
+
+    // for each
+    auto it = container.begin();
+
+    for(auto it = container.begin(); it != container.end(); ++it)
+    {
+        auto item = *it;        
+    }
+}
+
 int main()
 {
     // MusicApp app(std::make_shared<AppleMusicServiceCreator>("apple_user", "KJH8324d&df", 1500));
