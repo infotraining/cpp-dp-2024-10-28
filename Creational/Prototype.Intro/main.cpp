@@ -8,12 +8,30 @@ class Engine
 public:
     virtual void start() = 0;
     virtual void stop() = 0;
+    virtual std::unique_ptr<Engine> clone() const = 0;
     virtual ~Engine() = default;
 };
 
-class Diesel : public Engine
+// CRTP for cloning
+template <typename TEngine, typename TEngineBase = Engine>
+class CloneableEngine : public TEngineBase
 {
 public:
+    using TEngineBase::TEngineBase;
+
+    std::unique_ptr<Engine> clone() const override
+    {
+        return std::make_unique<TEngine>(static_cast<const TEngine&>(*this)); // call of copy constructor for T
+    }
+};
+
+class Diesel : public CloneableEngine<Diesel>
+{
+    double displacement_;
+public:
+    Diesel(double displacement) : displacement_{displacement}
+    {}
+
     virtual void start() override
     {
         std::cout << "Diesel starts\n";
@@ -25,9 +43,12 @@ public:
     }
 };
 
-class TDI : public Diesel
+class TDI : public CloneableEngine<TDI, Diesel>
 {
+    using BaseType = CloneableEngine<TDI, Diesel>;
 public:
+    using BaseType::BaseType;
+
     virtual void start() override
     {
         std::cout << "TDI starts\n";
@@ -39,7 +60,7 @@ public:
     }
 };
 
-class Hybrid : public Engine
+class Hybrid : public CloneableEngine<Hybrid>
 {
 public:
     virtual void start() override
@@ -63,6 +84,23 @@ public:
     {
     }
 
+    Car(const Car& source) : engine_{source.engine_->clone()}
+    {        
+    }
+    
+    Car& operator=(const Car& source) 
+    {
+        if (this != &source)
+        {
+            engine_ = source.engine_->clone();
+        }
+
+        return *this;
+    }
+
+    Car(Car&&) = default;
+    Car& operator=(Car&&) = default;
+
     void drive(int km)
     {
         engine_->start();
@@ -73,8 +111,11 @@ public:
 
 int main()
 {
-    Car c1{std::make_unique<Hybrid>()};
+    Car c1{std::make_unique<TDI>(2000)};
     c1.drive(100);
 
     std::cout << "\n";
+
+    Car c2 = c1;
+    c2.drive(200);
 }
