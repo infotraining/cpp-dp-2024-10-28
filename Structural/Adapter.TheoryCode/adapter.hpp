@@ -62,7 +62,7 @@ namespace HighLevel
 
 namespace LowLevel
 {
-    namespace API 
+    namespace API
     {
         class LEDLight
         {
@@ -73,7 +73,7 @@ namespace LowLevel
             }
         };
 
-            class CMYKLight
+        class CMYKLight
         {
         public:
             void set_cmyk(uint8_t c, uint8_t m, uint8_t y, uint8_t k)
@@ -104,6 +104,7 @@ namespace LowLevel
         class LEDSwitchWrapper : public HighLevel::ISwitch
         {
             API::LEDLight led_light_;
+
         public:
             void on() override
             {

@@ -5,7 +5,6 @@
 
 namespace Drawing
 {
-
     class Square : public Shape
     {
         Rectangle rect_;
