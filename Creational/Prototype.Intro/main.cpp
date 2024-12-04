@@ -8,18 +8,27 @@ class Engine
 public:
     virtual void start() = 0;
     virtual void stop() = 0;
-    virtual std::unique_ptr<Engine> clone() const = 0;
+    
+    std::unique_ptr<Engine> clone() const
+    {
+        auto cloned_engine = do_clone();
+        assert(typeid(*cloned_engine) == typeid(*this));
+        return cloned_engine;
+    }
+    
     virtual ~Engine() = default;
+protected:
+    virtual std::unique_ptr<Engine> do_clone() const = 0;
 };
 
 // CRTP for cloning
 template <typename TEngine, typename TEngineBase = Engine>
 class CloneableEngine : public TEngineBase
 {
-public:
+protected:
     using TEngineBase::TEngineBase;
 
-    std::unique_ptr<Engine> clone() const override
+    std::unique_ptr<Engine> do_clone() const override
     {
         return std::make_unique<TEngine>(static_cast<const TEngine&>(*this)); // call of copy constructor for T
     }
@@ -43,11 +52,10 @@ public:
     }
 };
 
-class TDI : public CloneableEngine<TDI, Diesel>
+class TDI : public Diesel
 {
-    using BaseType = CloneableEngine<TDI, Diesel>;
 public:
-    using BaseType::BaseType;
+    using Diesel::Diesel;
 
     virtual void start() override
     {
