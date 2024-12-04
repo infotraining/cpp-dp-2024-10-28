@@ -6,6 +6,8 @@
 * https://infotraining.bitbucket.io/cpp-dp/slides
 * https://infotraining.bitbucket.io/cpp-dp/slides_EN
 
+* https://infotraining.bitbucket.io/cpp-dp/slides_EN/deps/PITCHME.pdf
+
 ## Konfiguracja środowiska
 
 ### Wymagania
