@@ -1,7 +1,7 @@
 #include <iostream>
 #include <tuple>
 #include <vector>
-//#include <boost/flyweight.hpp>
+#include <boost/flyweight.hpp>
 #include <boost/algorithm/string.hpp>
 
 using namespace std;
@@ -9,7 +9,7 @@ using namespace std;
 class Taxpayer
 {
     int id_;
-    std::string first_name_;
+    boost::flyweight<std::string> first_name_;
     std::string last_name_;
 
 public:
@@ -27,7 +27,7 @@ public:
 
     string first_name() const
     {
-        return first_name_;
+        return first_name_; // implicit conversion flyweight<string> -> const string&
     }
 
     void set_first_name(const string& fname)
@@ -37,7 +37,7 @@ public:
 
     void to_upper()
     {
-        boost::to_upper(first_name_);
+        first_name_ = boost::to_upper_copy(first_name_.get());
         boost::to_upper(last_name_);
     }
 

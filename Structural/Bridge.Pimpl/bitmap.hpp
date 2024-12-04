@@ -8,9 +8,8 @@
 
 class Bitmap
 {
-    char* image_;
-    size_t size_;
-
+    struct Impl;
+    std::unique_ptr<Impl> pimpl_; // Private Implementation (Pimpl) Idiom
 public:
     Bitmap(size_t size, char fill_char = '*');
     ~Bitmap();
