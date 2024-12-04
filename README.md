@@ -8,6 +8,10 @@
 
 * https://infotraining.bitbucket.io/cpp-dp/slides_EN/deps/PITCHME.pdf
 
+## Evaluation Form
+
+* https://forms.gle/ueheGW8d2yu2bQm38
+
 ## Konfiguracja środowiska
 
 ### Wymagania
