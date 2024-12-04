@@ -26,11 +26,12 @@ class ReversibleCommand : public Command
 {
 public:
     virtual void undo() = 0;
-    virtual std::unique_ptr<ReversibleCommand> clone() const = 0;
+    virtual std::unique_ptr<ReversibleCommand> clone() const = 0; // Prototype Pattern
 };
 
 using ReversibleCommandPtr = std::unique_ptr<ReversibleCommand>;
 
+// CRTP
 template <typename Cmd, typename BaseCommand = ReversibleCommand>
 class CloneableCommand : public BaseCommand
 {
@@ -74,14 +75,14 @@ public:
     {
     }
 
-    void execute() final override
+    void execute() final override // Template Method Pattern
     {
         do_save_state();
         history_.record_last_command(this->clone());
         do_execute();
     }
 
-    void undo() final override
+    void undo() final override // Template Method Pattern
     {
         do_undo();
     }

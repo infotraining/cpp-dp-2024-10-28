@@ -22,6 +22,7 @@ struct Observable
     {        
         observers_.insert(observer);
     }
+    
     void unsubscribe(Observer<TSource, TEventArgs...>* observer) { observers_.erase(observer); }
 
 protected:
