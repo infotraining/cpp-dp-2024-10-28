@@ -27,14 +27,14 @@ namespace Version_1
     using Data = std::vector<double>;
     using Results = std::vector<StatResult>;
 
-    class StatisticsStrategy
+    class Statistics
     {
     public:
-        virtual ~StatisticsStrategy() = default;
+        virtual ~Statistics() = default;
         virtual void calculate(const Data& data, Results& result) const = 0;
     };
 
-    class AverageStrategy : public StatisticsStrategy
+    class Average : public Statistics
     {
     public:
         void calculate(const Data& data, Results& results) const override
@@ -45,7 +45,7 @@ namespace Version_1
         }
     };
 
-    class MinMaxStrategy : public StatisticsStrategy
+    class MinMax : public Statistics
     {
     public:
         void calculate(const Data& data, Results& results) const override
@@ -57,7 +57,7 @@ namespace Version_1
         }
     };
 
-    class SumStrategy : public StatisticsStrategy
+    class Sum : public Statistics
     {
     public:
         void calculate(const Data& data, Results& results) const override
@@ -66,14 +66,33 @@ namespace Version_1
             results.push_back(StatResult("Sum", sum));
         }
     };
+
+    class StatGroup : public Statistics
+    {
+        std::vector<std::shared_ptr<Statistics>> statistics_;
+    public:
+        StatGroup(std::initializer_list<std::shared_ptr<Statistics>> strategies)
+            : statistics_{strategies}
+        {
+        }
+
+        void calculate(const Data& data, Results& results) const override
+        {
+            for (const auto& stat : statistics_)
+            {
+                stat->calculate(data, results);
+            }
+        }
+    };
+
     class DataAnalyzer
     {
-        std::shared_ptr<StatisticsStrategy> strategy_;
+        std::shared_ptr<Statistics> strategy_;
         Data data_;
         Results results_;
 
     public:
-        explicit DataAnalyzer(std::shared_ptr<StatisticsStrategy> strategy)
+        explicit DataAnalyzer(std::shared_ptr<Statistics> strategy)
             : strategy_{std::move(strategy)}
         {
         }
@@ -96,7 +115,7 @@ namespace Version_1
             std::cout << "File " << file_name << " has been loaded...\n";
         }
 
-        void set_statistics(std::shared_ptr<StatisticsStrategy> strategy)
+        void set_statistics(std::shared_ptr<Statistics> strategy)
         {
             strategy_ = strategy;
         }
@@ -123,19 +142,17 @@ namespace Version_1
 
     int main()
     {
-        auto avg = std::make_shared<AverageStrategy>();
-        auto min_max = std::make_shared<MinMaxStrategy>();
-        auto sum = std::make_shared<SumStrategy>();
+        std::shared_ptr<Statistics> avg = std::make_shared<Average>();
+        std::shared_ptr<Statistics> min_max = std::make_shared<MinMax>();
+        std::shared_ptr<Statistics> sum = std::make_shared<Sum>();
+
+        auto list_of_stats = {avg, min_max, sum};
+        auto std_statistics = std::make_shared<StatGroup>(list_of_stats);
 
         DataAnalyzer da{avg};
         da.load_data("stats_data.dat");
         da.calculate();
 
-        da.set_statistics(min_max);
-        da.calculate();
-
-        da.set_statistics(sum);
-        da.calculate();
         show_results(da.results());
 
         std::cout << "\n\n";
@@ -248,6 +265,28 @@ namespace Version_2
         }
     };
 
+    struct StatGroup
+    {
+        std::vector<Statistics> statistics_;
+
+        StatGroup(std::initializer_list<Statistics> strategies)
+            : statistics_{strategies}
+        {
+        }
+
+        Results operator()(const Data& data) const
+        {
+            Results results;
+            for (const auto& stat : statistics_)
+            {
+                Results new_results = stat(data);
+                results.insert(results.end(), new_results.begin(), new_results.end());
+            }
+
+            return results;
+        }
+    };
+
     void show_results(const Results& results)
     {
         for (const auto& rslt : results)
@@ -260,15 +299,11 @@ namespace Version_2
         MinMaxStrategy min_max;
         SumStrategy sum;
 
-        DataAnalyzer da{avg};
+        StatGroup std_statistics{min_max, sum};
+        StatGroup advanced_statistics{avg, std_statistics};
+
+        DataAnalyzer da{std_statistics};
         da.load_data("stats_data.dat");
-
-        da.calculate();
-
-        da.set_strategy(min_max);
-        da.calculate();
-
-        da.set_strategy(sum);
         da.calculate();
 
         show_results(da.results());
