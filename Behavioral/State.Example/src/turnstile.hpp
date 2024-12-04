@@ -39,7 +39,6 @@ enum class TurnstileState
 
 namespace Before
 {
-
     class Turnstile
     {
         TurnstileState state_;
@@ -149,7 +148,7 @@ namespace After
     class Turnstile
     {
         const ITurnstileState* state_;
-        TurnstileAPI& api_;
+        TurnstileAPI& api_;        
 
     public:
         Turnstile(TurnstileAPI& api)
@@ -165,13 +164,13 @@ namespace After
 
         void coin()
         {
-            state_ = state_->coin(api_);
+            state_->coin(api_);
         }
 
         void pass()
         {
-            state_ = state_->pass(api_);
-        }
+            state_->pass(api_);
+        }        
     };
 }
 
